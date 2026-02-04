@@ -22,6 +22,7 @@ const menuItems = [
   { name: 'Dashboard', icon: LayoutDashboard, href: '/protected/admin' },
   { name: 'Bookings', icon: CalendarDays, href: '/protected/admin/bookings' },
   { name: 'Rooms', icon: DoorOpen, href: '/protected/admin/rooms' },
+  { name: "Calendar",icon: CalendarDays, href: "/protected/admin/calendar", },
   { name: 'Users', icon: Users, href: '/protected/admin/users' },
   { name: 'Logs', icon: Sailboat, href: '/protected/admin/logs' },
   { name: 'Settings', icon: Settings, href: '/protected/admin/settings' },
