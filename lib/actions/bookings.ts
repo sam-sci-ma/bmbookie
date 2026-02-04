@@ -11,14 +11,22 @@ export async function updateBookingStatus(
 ) {
   const supabase = await createClient();
 
-  // 1. Fetch the reservation first to get the user_id and room info for the message
+  // 1. Fetch the reservation (Using Type Casting to fix the Array error)
   const { data: booking } = await supabase
     .from("reservations")
-    .select("user_id, rooms(name)")
+    .select(`
+      user_id, 
+      rooms:room_id ( name )
+    `) // Explicitly join on the room_id
     .eq("id", reservationId)
     .single();
 
   if (!booking) throw new Error("Booking not found");
+
+  // Type-safe access: handle the case where rooms might be an array or object
+  const roomName = Array.isArray(booking.rooms) 
+    ? booking.rooms[0]?.name 
+    : (booking.rooms as any)?.name || "Unknown Room";
 
   // 2. Update the Reservation Status
   const { error: resError } = await supabase
@@ -40,9 +48,11 @@ export async function updateBookingStatus(
   // 4. AUTOMATED MESSAGE: Notify the user
   const isApproved = status === 'confirmed';
   const subject = isApproved ? "Booking Confirmed" : "Booking Update";
+  
+  // Using the safe roomName variable
   const content = isApproved 
-    ? `Your request for ${booking.rooms?.name} has been approved. Please ensure you check in on time.`
-    : `Regrettably, your request for ${booking.rooms?.name} was not approved. ${notes}`;
+    ? `Your request for ${roomName} has been approved. Please ensure you check in on time.`
+    : `Regrettably, your request for ${roomName} was not approved. ${notes}`;
 
   await supabase
     .from("messages")
