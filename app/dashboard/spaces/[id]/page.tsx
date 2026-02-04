@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import { MapPin, Users, LayoutGrid, Info, ShieldCheck } from "lucide-react";
+import Image from "next/image";
 
 export default async function SpaceDetailPage({ params }: { params: { id: string } }) {
   const supabase = await createClient();
@@ -15,7 +16,7 @@ export default async function SpaceDetailPage({ params }: { params: { id: string
         <div className="space-y-4">
           <div className="aspect-video bg-[#141414] rounded-[3rem] border border-white/10 overflow-hidden relative shadow-2xl">
             {space.image_url ? (
-               <Image src={room.image_url} alt={room.name} fill className="object-cover" />
+               <Image src={space.image_url} alt={space.name} fill className="object-cover" />
             ) : (
                <div className="flex items-center justify-center h-full text-gray-800 font-black uppercase text-xs">No Photo Registered</div>
             )}
