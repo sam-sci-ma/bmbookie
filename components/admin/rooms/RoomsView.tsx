@@ -11,20 +11,17 @@ import {
 import { cn } from "@/lib/utils";
 
 export default function RoomsView({ initialRooms }: { initialRooms: any[] }) {
-  // 1. Filtering State
   const [search, setSearch] = useState("");
   const [filters, setFilters] = useState({
     campus: "",
     building_id: "",
-    location: "", // Bloc
+    location: "", 
     is_restricted: ""
   });
 
-  // 2. Modal Management State
   const [selectedRoom, setSelectedRoom] = useState<any | null>(null);
   const [activeModal, setActiveModal] = useState<"view" | "edit" | "delete" | null>(null);
 
-  // 3. Filtering Logic
   const filteredRooms = useMemo(() => {
     return initialRooms.filter((room) => {
       const matchesSearch = 
@@ -41,7 +38,6 @@ export default function RoomsView({ initialRooms }: { initialRooms: any[] }) {
     });
   }, [search, filters, initialRooms]);
 
-  // Modal Trigger Helper
   const openModal = (room: any, type: "view" | "edit" | "delete") => {
     setSelectedRoom(room);
     setActiveModal(type);
@@ -53,7 +49,7 @@ export default function RoomsView({ initialRooms }: { initialRooms: any[] }) {
   };
 
   return (
-    <>
+    <div className="space-y-6">
       <RoomFilters 
         onSearch={(val) => setSearch(val)}
         onFilterChange={(key, val) => setFilters(prev => ({ ...prev, [key]: val }))}
@@ -63,8 +59,8 @@ export default function RoomsView({ initialRooms }: { initialRooms: any[] }) {
         }}
       />
 
-      {/* Table Section */}
-      <div className="bg-card border border-border rounded-[2rem] overflow-hidden shadow-sm mt-8 transition-all">
+      {/* --- PC VIEW: TABLE --- */}
+      <div className="hidden lg:block bg-card border border-border rounded-[2rem] overflow-hidden shadow-sm mt-8 transition-all">
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-muted/50 border-b border-border">
@@ -76,104 +72,107 @@ export default function RoomsView({ initialRooms }: { initialRooms: any[] }) {
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
-            {filteredRooms.length > 0 ? (
-              filteredRooms.map((room) => (
-                <tr key={room.id} className="hover:bg-muted/30 transition-colors group">
-                  <td className="p-6">
-                    <div className="flex items-center gap-3">
-                      <div className="p-2.5 bg-[#D7492A]/10 rounded-xl">
-                        <DoorOpen className="text-[#D7492A]" size={20} />
-                      </div>
-                      <div>
-                        <p className="font-bold text-foreground leading-tight">{room.name || "N/A"}</p>
-                        <p className="text-[10px] font-mono text-muted-foreground uppercase">{room.room_number}</p>
-                      </div>
+            {filteredRooms.map((room) => (
+              <tr key={room.id} className="hover:bg-muted/30 transition-colors group">
+                <td className="p-6">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2.5 bg-[#D7492A]/10 rounded-xl">
+                      <DoorOpen className="text-[#D7492A]" size={20} />
                     </div>
-                  </td>
-                  <td className="p-6">
-                    <div className="flex items-start gap-3">
-                      <MapPin size={16} className="text-[#D7492A] mt-1" />
-                      <div className="flex flex-col">
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm font-bold text-foreground">{room.building_id || "Main Building"}</span>
-                          <span className="text-[9px] font-black px-1.5 py-0.5 bg-muted rounded border border-border uppercase text-muted-foreground">
-                            {room.campus || "Benguerir"}
-                          </span>
-                        </div>
-                        <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider">
-                          Bloc: {room.location || "A"} • Floor: {room.floor || "0"}
-                        </span>
-                      </div>
+                    <div>
+                      <p className="font-bold text-foreground leading-tight">{room.name || "N/A"}</p>
+                      <p className="text-[10px] font-mono text-muted-foreground uppercase">{room.room_number}</p>
                     </div>
-                  </td>
-                  <td className="p-6 text-muted-foreground font-medium text-sm">
-                    <div className="flex items-center gap-2">
-                      <Users size={16} className="text-foreground" />
-                      {room.capacity} Seats
-                    </div>
-                  </td>
-                  <td className="p-6">
-                    <div className={cn(
-                      "inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-[10px] font-black uppercase tracking-tighter",
-                      room.is_restricted ? "bg-red-500/10 text-red-600 border-red-500/20" : "bg-green-500/10 text-green-600 border-green-500/20"
-                    )}>
-                      {room.is_restricted ? <Lock size={10} /> : <Unlock size={10} />}
-                      {room.is_restricted ? "Restricted" : "Public"}
-                    </div>
-                  </td>
-                  <td className="p-6">
-                    <div className="flex items-center justify-center gap-2">
-                      <button 
-                        onClick={() => openModal(room, "view")}
-                        className="p-2 text-muted-foreground hover:text-blue-500 hover:bg-blue-500/10 rounded-lg transition-all"
-                      >
-                        <Eye size={18} />
-                      </button>
-                      <button 
-                        onClick={() => openModal(room, "edit")}
-                        className="p-2 text-muted-foreground hover:text-[#D7492A] hover:bg-[#D7492A]/10 rounded-lg transition-all"
-                      >
-                        <Pencil size={18} />
-                      </button>
-                      <button 
-                        onClick={() => openModal(room, "delete")}
-                        className="p-2 text-muted-foreground hover:text-red-600 hover:bg-red-500/10 rounded-lg transition-all"
-                      >
-                        <Trash2 size={18} />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={5} className="p-20 text-center text-muted-foreground font-medium italic">
-                  No rooms match your active filters.
+                  </div>
+                </td>
+                <td className="p-6 text-sm font-medium">
+                   <div className="flex items-center gap-2">
+                     <span className="text-foreground">{room.building_id}</span>
+                     <span className="text-[9px] font-black px-1.5 py-0.5 bg-[#D7492A]/10 text-[#D7492A] rounded uppercase">
+                       {room.campus}
+                     </span>
+                   </div>
+                   <p className="text-[10px] text-muted-foreground uppercase mt-1">Bloc {room.location} • Floor {room.floor}</p>
+                </td>
+                <td className="p-6 text-muted-foreground font-bold text-sm">
+                  <div className="flex items-center gap-2">
+                    <Users size={16} /> {room.capacity}
+                  </div>
+                </td>
+                <td className="p-6 text-center">
+                   {room.is_restricted ? <Lock className="text-red-500" size={16}/> : <Unlock className="text-green-500" size={16}/>}
+                </td>
+                <td className="p-6 text-center">
+                   <ActionButtons room={room} openModal={openModal} />
                 </td>
               </tr>
-            )}
+            ))}
           </tbody>
         </table>
       </div>
 
-      {/* --- Modals Component Section --- */}
-      <RoomDetailsModal 
-        room={selectedRoom} 
-        isOpen={activeModal === "view"} 
-        onClose={closeModal} 
-      />
+      {/* --- MOBILE VIEW: CARD GRID --- */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:hidden gap-4 mt-8">
+        {filteredRooms.map((room) => (
+          <div key={room.id} className="bg-card border border-border p-5 rounded-[1.5rem] shadow-sm flex flex-col justify-between space-y-4">
+            <div className="flex justify-between items-start">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-[#D7492A]/10 rounded-lg">
+                  <DoorOpen className="text-[#D7492A]" size={18} />
+                </div>
+                <div>
+                  <h4 className="font-bold text-sm text-foreground">{room.name}</h4>
+                  <p className="text-[10px] font-mono text-muted-foreground uppercase">{room.room_number}</p>
+                </div>
+              </div>
+              <div className={cn(
+                "px-2 py-1 rounded-md text-[8px] font-black uppercase border",
+                room.is_restricted ? "bg-red-500/10 text-red-500 border-red-500/20" : "bg-green-500/10 text-green-500 border-green-500/20"
+              )}>
+                {room.is_restricted ? "Restricted" : "Public"}
+              </div>
+            </div>
 
-      <EditRoomModal 
-        room={selectedRoom} 
-        isOpen={activeModal === "edit"} 
-        onClose={closeModal} 
-      />
+            <div className="grid grid-cols-2 gap-2 text-[10px] uppercase font-black tracking-widest text-muted-foreground">
+              <div className="flex items-center gap-1"><MapPin size={10} className="text-[#D7492A]"/> {room.campus}</div>
+              <div className="flex items-center gap-1"><Users size={10} className="text-[#D7492A]"/> {room.capacity} Seats</div>
+            </div>
 
-      <DeleteRoomModal 
-        room={selectedRoom} 
-        isOpen={activeModal === "delete"} 
-        onClose={closeModal} 
-      />
-    </>
+            <div className="pt-2 border-t border-border/50">
+               <ActionButtons room={room} openModal={openModal} fullWidth />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Empty State */}
+      {filteredRooms.length === 0 && (
+        <div className="p-20 text-center text-muted-foreground font-black uppercase text-[10px] tracking-widest border border-dashed rounded-[2rem]">
+          No rooms match your active filters.
+        </div>
+      )}
+
+      {/* Modals */}
+      <RoomDetailsModal room={selectedRoom} isOpen={activeModal === "view"} onClose={closeModal} />
+      <EditRoomModal room={selectedRoom} isOpen={activeModal === "edit"} onClose={closeModal} />
+      <DeleteRoomModal room={selectedRoom} isOpen={activeModal === "delete"} onClose={closeModal} />
+    </div>
+  );
+}
+
+{/* REUSABLE ACTION BUTTONS */}
+function ActionButtons({ room, openModal, fullWidth }: any) {
+  return (
+    <div className={cn("flex items-center gap-2", fullWidth ? "justify-between" : "justify-center")}>
+      <button onClick={() => openModal(room, "view")} className="p-2.5 bg-muted/50 rounded-xl text-muted-foreground hover:text-blue-500 transition-colors">
+        <Eye size={18} />
+      </button>
+      <button onClick={() => openModal(room, "edit")} className="p-2.5 bg-muted/50 rounded-xl text-muted-foreground hover:text-[#D7492A] transition-colors">
+        <Pencil size={18} />
+      </button>
+      <button onClick={() => openModal(room, "delete")} className="p-2.5 bg-muted/50 rounded-xl text-muted-foreground hover:text-red-500 transition-colors">
+        <Trash2 size={18} />
+      </button>
+    </div>
   );
 }

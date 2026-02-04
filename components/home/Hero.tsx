@@ -31,7 +31,7 @@ export async function Hero({ containerStyles }: { containerStyles: string }) {
             Centralized <br /><span className="text-[#D7492A]">Spaces.</span>
           </h1>
           <p className="text-sm md:text-base text-gray-500 mb-8 leading-relaxed font-medium mx-auto lg:mx-0 max-w-md">
-            A unified booking engine for university resources. View the global timeline and coordinate sessions with zero friction.
+            A unified booking engine for spaces/rooms. View the global timeline and coordinate sessions with zero friction.
           </p>
           <Link href="/auth/login" className="inline-flex bg-[#D7492A] text-white px-6 py-3 rounded-xl text-sm font-bold hover:scale-[1.02] active:scale-[0.98] transition-all gap-3 shadow-lg shadow-[#D7492A]/30">
             Book a Resource <ArrowRight className="w-4 h-4" />

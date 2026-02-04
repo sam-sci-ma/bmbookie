@@ -18,7 +18,7 @@ export default function HowItWorks() {
     {
       icon: <UserPlus className="w-8 h-8" />,
       title: "Join Your Cluster",
-      desc: "Register with your university credentials and select your specific Department and Cluster (ABS, SCI, SHBM).",
+      desc: "Register with your UM6P credentials and select your specific Department(ABS, SCI, SHBM,StorySchool) and Cluster(Business Management,Science & Technology) .",
       color: "bg-blue-500"
     },
     {
@@ -36,7 +36,7 @@ export default function HowItWorks() {
     {
       icon: <QrCode className="w-8 h-8" />,
       title: "Seamless Check-in",
-      desc: "Arrive at your room and scan the QR code or use the mobile app to confirm your attendance and unlock the session.",
+      desc: "Arrive at your room and scan the QR code or use our PWA to confirm your attendance and unlock the session.",
       color: "bg-green-500"
     }
   ];
@@ -69,7 +69,7 @@ export default function HowItWorks() {
             <span className="text-primary">WORKS.</span>
           </h1>
           <p className="text-muted-foreground text-lg max-w-xl font-medium">
-            A streamlined four-step workflow designed specifically for the UM6P Shared Services ecosystem.
+            A streamlined four-step workflow designed specifically for the BM Shared Services .
           </p>
         </div>
       </header>
