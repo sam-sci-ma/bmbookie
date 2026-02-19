@@ -118,7 +118,7 @@ export default async function DashboardPage() {
           <div className="space-y-0.5">
             <h2 className="text-lg md:text-2xl font-black uppercase tracking-tighter flex items-center gap-2 text-white">
               <LayoutGrid className="text-[#D7492A] w-5 h-5 md:w-6 md:h-6" />
-              Institutional Rooms
+               Rooms
             </h2>
             <p className="text-[9px] font-bold text-gray-500 uppercase tracking-widest">Recommended Registry</p>
           </div>
