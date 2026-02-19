@@ -1,5 +1,5 @@
 import { LoginForm } from "@/components/login-form";
-import { Navbar } from "@/components/home/Navbar"; // Imported your component
+import { Navbar } from "@/components/home/Navbar";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 
@@ -18,8 +18,9 @@ export default async function Page() {
 
     const role = profile?.role?.toLowerCase();
 
-    // 2. Absolute Path Redirects
-    if (role === "admin") {
+    // 2. UPDATED: Systematic Tiered Redirects
+    // Check for both 'admin' and 'superadmin' roles
+    if (role === "admin" || role === "superadmin") {
       return redirect("/protected/admin");
     } else {
       return redirect("/dashboard");
@@ -41,9 +42,9 @@ export default async function Page() {
         </div>
       </main>
 
-      {/* Optional: Small footer for consistent branding */}
+      {/* Small footer for consistent branding */}
       <footer className="py-6 text-center text-[10px] text-muted-foreground uppercase tracking-widest opacity-50">
-        Secure Access • Booky Shared Services 2026
+       Booky Shared Services | UM6P &copy; {new Date().getFullYear()}
       </footer>
     </div>
   );
