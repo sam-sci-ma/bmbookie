@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import RoomsView from "@/components/admin/rooms/RoomsView";
-import RegisterRoomButton from "@/components/admin/rooms/RegisterRoomButton"; // Import the wrapper
+import RegisterRoomButton from "@/components/admin/rooms/RegisterRoomButton";
 
 export default async function RoomsManagementPage() {
   const supabase = await createClient();

@@ -181,7 +181,7 @@ export default function BookSpacePage({ params }: PageProps) {
      <SuccessModal 
   bookingId={displayId} 
   isOpen={showSuccess} 
-  onClose={() => setShowSuccess(false)} // Add this line
+  onClose={() => setShowSuccess(false)}
 />
     </div>
   );
