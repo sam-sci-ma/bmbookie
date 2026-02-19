@@ -22,10 +22,10 @@ export default async function AdminCalendarPage() {
     <div className="space-y-8 pb-10">
       <div className="flex flex-col gap-1">
         <h1 className="text-3xl font-black text-foreground tracking-tight">
-          Institutional <span className="text-[#D7492A]">Scheduler</span>
+          Rooms/Events <span className="text-[#D7492A]">Scheduler</span>
         </h1>
         <p className="text-muted-foreground font-medium text-sm">
-          Navigating {reservations?.length || 0} scheduled events for the 2026 Roadmap.
+          Navigating {reservations?.length || 0} scheduled events for this academic year.
         </p>
       </div>
 
