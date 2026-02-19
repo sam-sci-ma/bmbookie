@@ -13,7 +13,7 @@
 
     /* Booky Brand Color: #D7492A (HSL: 11 68% 50%) */
     --primary: 11 68% 50%;
-    --primary-foreground: 0 0% 100%; /* Pure White text on Orange */
+    --primary-foreground: 0 0% 100%;
 
     --secondary: 0 0% 96.1%;
     --secondary-foreground: 11 68% 50%;
@@ -30,31 +30,26 @@
     --input: 0 0% 89.8%;
     --ring: 11 68% 50%;
 
-    --chart-1: 11 68% 50%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-    --radius: 0.75rem; /* Slightly rounded for institutional feel */
+    --radius: 0.75rem;
   }
 
   .dark {
     --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
+    --card: 0 0% 6%; /* Slightly lighter than background for depth */
     --card-foreground: 0 0% 98%;
     --popover: 0 0% 3.9%;
     --popover-foreground: 0 0% 98%;
 
-    /* Dark mode primary: Accessible brand orange */
     --primary: 11 75% 55%; 
-    --primary-foreground: 0 0% 100%; /* CHANGED: Pure white text on orange for dark mode */
+    --primary-foreground: 0 0% 100%;
 
     --secondary: 0 0% 14.9%;
     --secondary-foreground: 0 0% 98%;
     
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 65%; /* CHANGED: Lighter for better readability against dark bg */
+    /* IMPROVED: Increased lightness from 65% to 75% for better visibility */
+    --muted: 0 0% 12%; 
+    --muted-foreground: 0 0% 75%; 
     
     --accent: 0 0% 14.9%;
     --accent-foreground: 0 0% 98%;
@@ -62,7 +57,8 @@
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
     
-    --border: 0 0% 18%; /* Slightly lighter border for depth */
+    /* IMPROVED: Lightened border for clear definition on dark screens */
+    --border: 0 0% 20%; 
     --input: 0 0% 14.9%;
     --ring: 11 68% 50%;
   }
@@ -73,7 +69,6 @@
     @apply border-border;
   }
   body {
-    /* antialiased makes text look cleaner on dark backgrounds */
     @apply bg-background text-foreground antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
