@@ -5,12 +5,27 @@ import AdminSettingsView from "@/components/admin/settings/AdminSettingsView";
 export default async function AdminSettingsPage() {
   const supabase = await createClient();
   
-  // Verify Admin Authority
+  // 1. Verify Admin/Superadmin Authority
   const { data: { user } } = await supabase.auth.getUser();
-  const { data: profile } = await supabase.from("profiles").select("role").eq("id", user?.id).single();
-  if (profile?.role !== 'admin') redirect("/dashboard");
+  
+  // If no user is found, send to login immediately
+  if (!user) redirect("/auth/login");
 
-  // Fetch Institutional Config in parallel
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  // SYSTEMATIC FIX: Define allowed roles for governance
+  const allowedRoles = ['admin', 'superadmin'];
+  const userRole = profile?.role?.toLowerCase();
+
+  if (!userRole || !allowedRoles.includes(userRole)) {
+    redirect("/dashboard");
+  }
+
+  // 2. Fetch Institutional Config in parallel
   const [clusters, departments, rules] = await Promise.all([
     supabase.from("clusters").select("*").order("name"),
     supabase.from("departments").select("*, clusters(name)").order("name"),
@@ -22,7 +37,7 @@ export default async function AdminSettingsPage() {
       <header>
         <h1 className="text-3xl font-semibold tracking-tight">Institutional Control</h1>
         <p className="text-[10px] text-muted-foreground uppercase tracking-[0.2em] mt-2 font-bold">
-          2026 Governance: Clusters, Departments & Booking Protocols
+          2026 Shared services
         </p>
       </header>
 
