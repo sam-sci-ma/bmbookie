@@ -60,8 +60,8 @@ export function LoginForm({
 
         const role = profile?.role?.toLowerCase();
 
-        // 3. Redirect based on the role found in the database
-        if (role === "admin") {
+        // 3. UPDATED REDIRECTION LOGIC: Allow both admin and superadmin to enter the admin area
+        if (role === "admin" || role === "superadmin") {
           router.push("/protected/admin");
         } else {
           router.push("/dashboard");
