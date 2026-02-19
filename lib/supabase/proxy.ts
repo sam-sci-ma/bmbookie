@@ -37,7 +37,7 @@ export async function updateSession(request: NextRequest) {
   const { data } = await supabase.auth.getClaims();
   const user = data?.claims;
 
-  // 1. GUEST REDIRECT: If no user and trying to access protected routes
+  // 1. GUEST REDIRECT
   if (
     request.nextUrl.pathname !== "/" &&
     !user &&
@@ -49,17 +49,18 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // 2. ADMIN GUARD: If accessing admin area, verify role
+  // 2. ADMIN & SUPERADMIN GUARD
   if (request.nextUrl.pathname.startsWith("/protected/admin")) {
-    // If user claims don't have the role, check the DB profiles table
-    // (Note: Using getClaims is fast, but for roles, we usually query the DB for the most up-to-date info)
     const { data: profile } = await supabase
       .from("profiles")
       .select("role")
-      .eq("id", user?.sub) // sub is the User ID in JWT claims
+      .eq("id", user?.sub)
       .single();
 
-    if (profile?.role !== "admin") {
+    // SYSTEMATIC FIX: Check for both admin and superadmin roles
+    const isAuthorized = profile?.role === "admin" || profile?.role === "superadmin";
+
+    if (!isAuthorized) {
       const url = request.nextUrl.clone();
       url.pathname = "/dashboard"; 
       return NextResponse.redirect(url);
