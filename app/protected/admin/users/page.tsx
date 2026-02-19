@@ -31,7 +31,7 @@ export default async function UsersManagementPage() {
           Institutional <span className="text-[#D7492A]">Users</span>
         </h1>
         <p className="text-muted-foreground font-medium text-sm">
-          Managing {profilesResponse.data?.length || 0} registered identities for the 2026 Rollout.
+          Managing {profilesResponse.data?.length || 0} registered identities for this academic year.
         </p>
       </div>
 

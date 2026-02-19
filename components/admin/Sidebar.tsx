@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { 
@@ -13,7 +13,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Sailboat,
-  Menu
+  ShieldCheck
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
@@ -22,23 +22,45 @@ const menuItems = [
   { name: 'Dashboard', icon: LayoutDashboard, href: '/protected/admin' },
   { name: 'Bookings', icon: CalendarDays, href: '/protected/admin/bookings' },
   { name: 'Rooms', icon: DoorOpen, href: '/protected/admin/rooms' },
-  { name: "Calendar",icon: CalendarDays, href: "/protected/admin/calendar", },
-  { name: 'Users', icon: Users, href: '/protected/admin/users' },
-  { name: 'Logs', icon: Sailboat, href: '/protected/admin/logs' },
+  { name: "Calendar", icon: CalendarDays, href: "/protected/admin/calendar" },
+  { name: 'Access Requests', icon: ShieldCheck, href: '/protected/admin/requests', requiredRole: 'superadmin' },
+  { name: 'Users', icon: Users, href: '/protected/admin/users', requiredRole: 'superadmin' },
+  { name: 'Logs', icon: Sailboat, href: '/protected/admin/logs', requiredRole: 'superadmin' },
   { name: 'Settings', icon: Settings, href: '/protected/admin/settings' },
 ];
 
 export default function Sidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [userRole, setUserRole] = useState<string | null>(null);
   const pathname = usePathname();
   const router = useRouter();
   const supabase = createClient();
+
+  useEffect(() => {
+    const fetchUserRole = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', user.id)
+          .single();
+        setUserRole(data?.role);
+      }
+    };
+    fetchUserRole();
+  }, [supabase]);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
     router.push("/auth/login");
     router.refresh();
   };
+
+  // Filter menu items based on role
+  const filteredMenu = menuItems.filter(item => 
+    !item.requiredRole || item.requiredRole === userRole
+  );
 
   return (
     <>
@@ -63,12 +85,14 @@ export default function Sidebar() {
 
         {!isCollapsed && (
           <div className="px-4 mb-2">
-            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Administration</p>
+            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">
+              {userRole === 'superadmin' ? "System Control" : "Administration"}
+            </p>
           </div>
         )}
         
         <nav className="flex-1 space-y-1 overflow-y-auto custom-scrollbar">
-          {menuItems.map((item) => {
+          {filteredMenu.map((item) => {
             const isActive = pathname === item.href;
             return (
               <Link 
@@ -104,7 +128,7 @@ export default function Sidebar() {
       {/* --- MOBILE BOTTOM NAV (Visible only on Phone) --- */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-card/80 backdrop-blur-lg border-t border-border z-[100] px-2 py-3">
         <div className="flex justify-around items-center">
-          {menuItems.slice(0, 5).map((item) => {
+          {filteredMenu.slice(0, 5).map((item) => {
             const isActive = pathname === item.href;
             return (
               <Link 
