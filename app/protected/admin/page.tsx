@@ -73,13 +73,13 @@ export default async function AdminDashboard() {
         ))}
       </div>
 
-      {/* 3. GLOBAL DAILY AGENDA */}
+      {/* 3. TODAY'S ACTIVITY */}
       <section className="space-y-4 md:space-y-6">
         <div className="flex items-center gap-3">
           <div className="p-1.5 bg-[#D7492A]/10 rounded-lg text-[#D7492A]">
             <Clock size={18} />
           </div>
-          <h2 className="text-lg md:text-xl font-black uppercase tracking-tighter text-foreground">Global Timeline</h2>
+          <h2 className="text-lg md:text-xl font-black uppercase tracking-tighter text-foreground">TODAY'S ACTIVITY</h2>
         </div>
 
         <div className="grid gap-3 md:gap-4">
