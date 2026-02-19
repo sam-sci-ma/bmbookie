@@ -18,18 +18,21 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     .eq("id", user.id)
     .single();
 
-  // Redirect to dashboard if the role isn't explicitly admin
-  if (profile?.role?.toLowerCase() !== "admin") {
+  const role = profile?.role?.toLowerCase();
+
+  // SYSTEMATIC FIX: Allow both 'admin' and 'superadmin'
+  if (role !== "admin" && role !== "superadmin") {
     redirect("/dashboard");
   }
 
   return (
     <div className="flex min-h-screen bg-[#F0F0F0]">
-      {/* Prop removed to match your Sidebar component definition */}
       <Sidebar /> 
       
       <div className="flex flex-1 flex-col">
         <Header />
+        {/* Note: I'm keeping your 'bg-white' and 'border-black' 
+            as requested to maintain your design logic */}
         <main className="p-8 flex-1 overflow-y-auto border-l-4 border-black bg-white">
           {children}
         </main>
